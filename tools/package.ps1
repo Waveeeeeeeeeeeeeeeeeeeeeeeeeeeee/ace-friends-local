@@ -5,7 +5,7 @@ if (!$OutputDirectory) { $OutputDirectory = Join-Path $standRoot '.state\dist' }
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-$files = @('.gitignore', 'README.md', 'compose.yaml')
+$files = @('.gitattributes', '.gitignore', 'README.md', 'compose.yaml')
 foreach ($folder in @('docker', 'data', 'tools')) {
     $files += Get-ChildItem -LiteralPath (Join-Path $standRoot $folder) -Recurse -File |
         ForEach-Object { $_.FullName.Substring($standRoot.Length + 1).Replace('\', '/') }
