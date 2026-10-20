@@ -1,0 +1,349 @@
+name: ace-dev-stack
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 5m
+    max-file: "2"
+
+x-backend: &backend
+  init: true
+  mem_limit: 512m
+  logging: *logging
+  depends_on:
+    seed:
+      condition: service_completed_successfully
+    redis:
+      condition: service_healthy
+    gateway:
+      condition: service_started
+
+x-healthcheck: &http-health
+  interval: 10s
+  timeout: 5s
+  start_period: 40s
+  retries: 6
+
+x-worker: &worker
+  image: ${COMPOSE_PROJECT_NAME:-ace-dev-stack}-notifies:local
+  pull_policy: never
+  init: true
+  mem_limit: 384m
+  logging: *logging
+  environment:
+    CONFIG_PATH: /run/ace/config/notifies.yaml
+    CELERY_REDIS_URL: redis://redis:6379/2
+  volumes:
+    - ./.private:/run/ace:ro
+    - ../ace-friends-notifies/server:/app/server:ro
+  depends_on:
+    notifies:
+      condition: service_healthy
+
+services:
+  # Local keys and service configs are prepared before PostgreSQL or S3 start.
+  bootstrap:
+    logging: *logging
+    build:
+      context: ./docker
+      dockerfile: bootstrap.Dockerfile
+    restart: "no"
+    environment:
+      ACE_SOURCE_ROOT: /sources
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-ace-dev-stack}
+      GATEWAY_URL: http://localhost:${GATEWAY_PORT:-18080}
+      VAULT_URL: http://localhost:${VAULT_PORT:-18200}
+      S3_PUBLIC_URL: http://localhost:${S3_PORT:-19000}
+    volumes:
+      - ./.private:/workspace/.private
+      - ../ace-friends-database/config:/sources/ace-friends-database/config:ro
+      - ../ace-friends-auth/config:/sources/ace-friends-auth/config:ro
+      - ../ace-friends-gis/config:/sources/ace-friends-gis/config:ro
+      - ../ace-friends-dating/config:/sources/ace-friends-dating/config:ro
+      - ../ace-friends-ai/config:/sources/ace-friends-ai/config:ro
+      - ../ace-friends-notifies/config:/sources/ace-friends-notifies/config:ro
+      - ../ace-friends-admin/config:/sources/ace-friends-admin/config:ro
+      - ../ace-friends-scheduler/config:/sources/ace-friends-scheduler/config:ro
+      - ../ace-friends-tg-bot/config:/sources/ace-friends-tg-bot/config:ro
+    depends_on:
+      vault:
+        condition: service_started
+
+  postgres:
+    logging: *logging
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: ace_local
+      POSTGRES_USER: ace
+      POSTGRES_PASSWORD_FILE: /run/ace/postgres-password
+    ports: ["127.0.0.1:${POSTGRES_PORT:-15432}:5432"]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./.private:/run/ace:ro
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U ace -d ace_local"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    logging: *logging
+    image: redis:7.4-alpine
+    command: [redis-server, --appendonly, "yes"]
+    ports: ["127.0.0.1:${REDIS_PORT:-16379}:6379"]
+    volumes: [redis-data:/data]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  vault:
+    logging: *logging
+    image: ghcr.io/openbao/openbao:2.7.1
+    entrypoint: [/usr/bin/bao]
+    command: [server, -config=/etc/openbao/local.hcl]
+    ports: ["127.0.0.1:${VAULT_PORT:-18200}:8200"]
+    volumes:
+      - ./docker/openbao.hcl:/etc/openbao/local.hcl:ro
+      - vault-data:/openbao/file
+
+  qdrant:
+    logging: *logging
+    image: qdrant/qdrant:v1.15.1
+    ports: ["127.0.0.1:${QDRANT_PORT:-16333}:6333"]
+    volumes: [qdrant-data:/qdrant/storage]
+
+  s3:
+    logging: *logging
+    image: chrislusf/seaweedfs:4.37
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        export AWS_ACCESS_KEY_ID=ace-local
+        export AWS_SECRET_ACCESS_KEY="$$(cat /run/ace/s3-secret)"
+        exec /entrypoint.sh mini -dir=/data
+    ports: ["127.0.0.1:${S3_PORT:-19000}:8333"]
+    volumes:
+      - s3-data:/data
+      - ./.private:/run/ace:ro
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+
+  mailpit:
+    logging: *logging
+    image: axllent/mailpit:v1.31.6
+    command: [--smtp-auth-accept-any, --smtp-auth-allow-insecure]
+    ports: ["127.0.0.1:${MAILPIT_PORT:-18025}:8025"]
+
+  gateway:
+    logging: *logging
+    image: nginx:1.28-alpine
+    ports: ["127.0.0.1:${GATEWAY_PORT:-18080}:80"]
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  # One-time database restore, photo upload and search indexing.
+  seed:
+    logging: *logging
+    build:
+      context: ./docker
+      dockerfile: data.Dockerfile
+      args:
+        DATING_IMAGE: dating
+      additional_contexts:
+        dating: service:dating
+    restart: "no"
+    volumes:
+      - ./.private:/workspace/.private
+      - ./.state:/workspace/.state
+      - ./data:/workspace/data:ro
+      - ../ace-friends-dating:/sources/dating:ro
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      s3:
+        condition: service_started
+      qdrant:
+        condition: service_started
+
+  database:
+    <<: *backend
+    build:
+      context: ../ace-friends-database
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/database.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-database/server:/app/server:ro
+    ports: ["127.0.0.1:${DATABASE_PORT:-15000}:15000"]
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15000/ready', timeout=3).read()"]
+
+  auth:
+    <<: *backend
+    build:
+      context: ../ace-friends-auth
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/auth.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-auth/server:/app/server:ro
+    ports: ["127.0.0.1:${AUTH_PORT:-15100}:15100"]
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15100/ready', timeout=3).read()"]
+
+  gis:
+    <<: *backend
+    build:
+      context: ../ace-friends-gis
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/gis.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-gis/server:/app/server:ro
+    ports: ["127.0.0.1:${GIS_PORT:-15200}:15200"]
+    depends_on:
+      auth:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15200/ready', timeout=3).read()"]
+
+  dating:
+    <<: *backend
+    build:
+      context: ../ace-friends-dating
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/dating.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-dating/server:/app/server:ro
+    ports: ["127.0.0.1:${DATING_PORT:-15300}:15300"]
+    depends_on:
+      auth:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15300/ready', timeout=3).read()"]
+
+  admin:
+    <<: *backend
+    build:
+      context: ../ace-friends-admin
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/admin.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-admin/server:/app/server:ro
+    ports: ["127.0.0.1:${ADMIN_PORT:-15600}:15600"]
+    depends_on:
+      auth:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15600/ready', timeout=3).read()"]
+
+  ai:
+    <<: *backend
+    build:
+      context: ../ace-friends-ai
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/ai.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-ai/server:/app/server:ro
+    ports: ["127.0.0.1:${AI_PORT:-15400}:15400"]
+    depends_on:
+      auth:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15400/ready', timeout=3).read()"]
+
+  notifies:
+    <<: *backend
+    image: ${COMPOSE_PROJECT_NAME:-ace-dev-stack}-notifies:local
+    pull_policy: build
+    build:
+      context: ../ace-friends-notifies
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/notifies.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-notifies/server:/app/server:ro
+    ports: ["127.0.0.1:${NOTIFIES_PORT:-15500}:15500"]
+    depends_on:
+      auth:
+        condition: service_healthy
+    healthcheck:
+      <<: *http-health
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:15500/ready', timeout=3).read()"]
+
+  scheduler:
+    <<: *backend
+    build:
+      context: ../ace-friends-scheduler
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/scheduler.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-scheduler/server:/app/server:ro
+    depends_on:
+      notifies:
+        condition: service_healthy
+
+  worker-high:
+    <<: *worker
+    command: [celery, -A, server.core.celery.app, worker, --loglevel=warning, --queues=high_priority, --concurrency=1]
+
+  worker-medium:
+    <<: *worker
+    command: [celery, -A, server.core.celery.app, worker, --loglevel=warning, --queues=medium_priority, --concurrency=1]
+
+  worker-low:
+    <<: *worker
+    command: [celery, -A, server.core.celery.app, worker, --loglevel=warning, --queues=low_priority, --concurrency=1]
+
+  tg-bot:
+    <<: *backend
+    profiles: [telegram]
+    build:
+      context: ../ace-friends-tg-bot
+      dockerfile: ../ace-friends-local/docker/python.Dockerfile
+    environment:
+      CONFIG_PATH: /run/ace/config/tg-bot.yaml
+    volumes:
+      - ./.private:/run/ace:ro
+      - ../ace-friends-tg-bot/server:/app/server:ro
+    depends_on:
+      auth:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+  redis-data:
+  vault-data:
+  qdrant-data:
+  s3-data:

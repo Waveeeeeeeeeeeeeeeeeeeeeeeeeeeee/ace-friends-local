@@ -1,0 +1,267 @@
+{
+  "format": 1,
+  "bundle_id": "13a57d5ab90a42759db482a34f0d7bd7",
+  "created_at": "2026-10-20T09:42:36.873419+00:00",
+  "description": "Artificial ACE local fixtures; no production database or reusable secrets",
+  "counts": {
+    "users": 2005,
+    "dating_profiles": 3204,
+    "dating_games": 31,
+    "countries": 1,
+    "cities": 1
+  },
+  "database": {
+    "file": "database.sql.gz",
+    "bytes": 364955,
+    "sha256": "10510caf48935faeedeb757e10d02558288e8cefff901f5e29addf72bb5973e9"
+  },
+  "objects": [
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/ab1ecddc-a46a-43bf-a837-0aa31d53f931.JPEG",
+      "file": "media/profiles/2037/ab1ecddc-a46a-43bf-a837-0aa31d53f931.JPEG",
+      "bytes": 262777,
+      "sha256": "8e16843463f1cef6fefdfb734eba1c96a961ed8c8e2a3728727c7ace14cb33ab",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/1b9d13fb-5e58-4257-9ca0-ec5adc201f34.JPEG",
+      "file": "media/profiles/2037/1b9d13fb-5e58-4257-9ca0-ec5adc201f34.JPEG",
+      "bytes": 16001,
+      "sha256": "e963bd60dadcf472f48525763e336fed65ae2ed3b0fd1adf7d19693fe2e3bc7c",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/b199ea42-6059-4ba2-bd46-a6681d4d0dd9.JPEG",
+      "file": "media/profiles/2037/b199ea42-6059-4ba2-bd46-a6681d4d0dd9.JPEG",
+      "bytes": 121965,
+      "sha256": "8ac69a72f391dab33cad7ec53a5a1afa7bd7eafad0a4bccf386cdc8de8f3dc87",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/6686fc52-d8cc-4eb0-a92f-c4bb96123ab6.JPEG",
+      "file": "media/profiles/2037/6686fc52-d8cc-4eb0-a92f-c4bb96123ab6.JPEG",
+      "bytes": 8570,
+      "sha256": "c9a6f356db18ddf04cec54a8eca12754ecd55ca616a8aee51ea5d7d00cf31de5",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/c29fccf9-74e8-4c31-a003-9ffb576cece9.JPEG",
+      "file": "media/profiles/2037/c29fccf9-74e8-4c31-a003-9ffb576cece9.JPEG",
+      "bytes": 135306,
+      "sha256": "3ef2516c830906f12bfcfcd9debd18b510eec51318d2a67601d5f82f5f8d98f2",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/f1a0276c-9a3e-4a04-8c6e-e21af6a99a74.JPEG",
+      "file": "media/profiles/2037/f1a0276c-9a3e-4a04-8c6e-e21af6a99a74.JPEG",
+      "bytes": 12660,
+      "sha256": "b78c2a09feb92e400b31bf7c6002580c452f2cce1abcaeb21d6dce919c7f5ec9",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/c3d96972-7360-4453-9912-a9752303e5c4.JPEG",
+      "file": "media/profiles/2037/c3d96972-7360-4453-9912-a9752303e5c4.JPEG",
+      "bytes": 181191,
+      "sha256": "df026b7aa01810b14547bd2df052f9fba627970b452d9ce5e0d584707d0423c8",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2037/93e6c11c-e1fc-4066-bb02-b8759eedaf39.JPEG",
+      "file": "media/profiles/2037/93e6c11c-e1fc-4066-bb02-b8759eedaf39.JPEG",
+      "bytes": 12207,
+      "sha256": "c1bdb5a7e512931ca26a0fcb99454a3991adc24b583c3ecbafe6a5a2931c3f6b",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2038/aba91684-d444-4254-8a11-8140fca3a849.JPEG",
+      "file": "media/profiles/2038/aba91684-d444-4254-8a11-8140fca3a849.JPEG",
+      "bytes": 235201,
+      "sha256": "1ffbe40513f480d72731bb36b807a60a4f42e81b30d13304de0016f133b9a6f7",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2038/51d26055-5d74-49d1-bc96-46505a23909c.JPEG",
+      "file": "media/profiles/2038/51d26055-5d74-49d1-bc96-46505a23909c.JPEG",
+      "bytes": 22923,
+      "sha256": "c8cf310e3ff66a164bbca4a497d00fdbed8c0fc537efc50c10b411d8893c7847",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2038/dbcc4e00-5720-4041-b048-752c83bfe5bf.JPEG",
+      "file": "media/profiles/2038/dbcc4e00-5720-4041-b048-752c83bfe5bf.JPEG",
+      "bytes": 200678,
+      "sha256": "fc5725c1313767f6313c52d7734f5f80ee828f39e9da55075425da433ee637f2",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2038/ca37daf0-43d9-4847-b99a-6abea72ccc9c.JPEG",
+      "file": "media/profiles/2038/ca37daf0-43d9-4847-b99a-6abea72ccc9c.JPEG",
+      "bytes": 13326,
+      "sha256": "4cffd4e96dde5b25f91b4794acb44f8ae47be91aee12f1f9dbbafa3e4c595e92",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2038/ee99c71c-96b5-40f6-ace5-249d40a6a53f.JPEG",
+      "file": "media/profiles/2038/ee99c71c-96b5-40f6-ace5-249d40a6a53f.JPEG",
+      "bytes": 169499,
+      "sha256": "06c04cf50d04349dff553c3ef4f71533deaf98fc3a7fecf0f8cbc0eeacb1dffe",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2038/bf06ad78-4a33-414b-8176-cfe072fb15be.JPEG",
+      "file": "media/profiles/2038/bf06ad78-4a33-414b-8176-cfe072fb15be.JPEG",
+      "bytes": 12091,
+      "sha256": "9cd48678dce16b7844447bb95fd8c3115dc1873e8aacac1b011c78b5cfcf4971",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/0a25fafe-c0d4-4c05-ad9c-2600e5cfa5e9.JPEG",
+      "file": "media/profiles/2039/0a25fafe-c0d4-4c05-ad9c-2600e5cfa5e9.JPEG",
+      "bytes": 163706,
+      "sha256": "8bed5fad792a48efc7b0a348b3be1a43565dee3db4f479f32f4414e4e63bd0c6",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/d2155995-a243-48c6-a01f-f1ed5c67852d.JPEG",
+      "file": "media/profiles/2039/d2155995-a243-48c6-a01f-f1ed5c67852d.JPEG",
+      "bytes": 13127,
+      "sha256": "d6cc31a0a067074ec2c6e3f5552f626ca3abc91efd3387cfd01f1927401e9503",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/0fab2d0a-96d2-4cdf-b770-0b0eb647895e.JPEG",
+      "file": "media/profiles/2039/0fab2d0a-96d2-4cdf-b770-0b0eb647895e.JPEG",
+      "bytes": 115774,
+      "sha256": "915f32feec88c9e1f2197b6a1974eb4a5d4292444d10ac6411288fe0bda3b467",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/4e542b94-e897-423b-828a-99569dd5b395.JPEG",
+      "file": "media/profiles/2039/4e542b94-e897-423b-828a-99569dd5b395.JPEG",
+      "bytes": 12865,
+      "sha256": "d7cfd82133bbfd4ab30567d9ab48c5defe1517bf2db83914e80085ef898aaecf",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/1fa4bd70-a6d2-4b51-8127-c0663cd3b6d4.JPEG",
+      "file": "media/profiles/2039/1fa4bd70-a6d2-4b51-8127-c0663cd3b6d4.JPEG",
+      "bytes": 201065,
+      "sha256": "93abbeab2faea038f67f9093594446c05d11f7401a55d32a7ed863c66e943da3",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/14735f8c-2b99-42ee-a6b3-2497aa4dcb45.JPEG",
+      "file": "media/profiles/2039/14735f8c-2b99-42ee-a6b3-2497aa4dcb45.JPEG",
+      "bytes": 20924,
+      "sha256": "7baad082f22ad99099a868def68511e0672dad09b5e94c2178e0a61bd3cbd25b",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/3ae79f70-a7a9-4945-b2a4-114c856dbc4d.JPEG",
+      "file": "media/profiles/2039/3ae79f70-a7a9-4945-b2a4-114c856dbc4d.JPEG",
+      "bytes": 326061,
+      "sha256": "d1e886e633f1b26319dd54358c7c1adbf23709d1638a9fd3f84c3baf0974969a",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2039/2cfab101-0ee0-4ea8-9ee3-62386959ac9e.JPEG",
+      "file": "media/profiles/2039/2cfab101-0ee0-4ea8-9ee3-62386959ac9e.JPEG",
+      "bytes": 18012,
+      "sha256": "2e2273f24b986b3274ed8ec4720e7bb8e65dd1ee1451a25e13fa38e46f985d67",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/27c1047d-f498-4c79-b0ff-59fc63b21c22.JPEG",
+      "file": "media/profiles/2040/27c1047d-f498-4c79-b0ff-59fc63b21c22.JPEG",
+      "bytes": 184796,
+      "sha256": "978b22a97b13ed6fe7e0bce25a519d41351c8aa62824e7f37cb9f7ceb4629407",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/61724fa8-8090-4dbd-b7a3-d6acae92b798.JPEG",
+      "file": "media/profiles/2040/61724fa8-8090-4dbd-b7a3-d6acae92b798.JPEG",
+      "bytes": 17164,
+      "sha256": "d037e14fce1143ba65b980575f02a1b71e546735a080320201ca6d195fd0d0d1",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/40b4360e-ea35-470e-9368-b339b72b96d5.JPEG",
+      "file": "media/profiles/2040/40b4360e-ea35-470e-9368-b339b72b96d5.JPEG",
+      "bytes": 52069,
+      "sha256": "2344a106b4124c4b599d614b39ad3b9a4ca9f8ff4f03a99d7f196a40051045ad",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/2aada7a6-1106-45af-b3c6-2e1883cbef0f.JPEG",
+      "file": "media/profiles/2040/2aada7a6-1106-45af-b3c6-2e1883cbef0f.JPEG",
+      "bytes": 7484,
+      "sha256": "6c1b1690139011f44ef741bef8652763efe79e8827fd7158daaefd0c561802e5",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/94685c0c-12a6-4db1-abb3-5f92742e2439.JPEG",
+      "file": "media/profiles/2040/94685c0c-12a6-4db1-abb3-5f92742e2439.JPEG",
+      "bytes": 218059,
+      "sha256": "7ec54e5b34156efec3ea64e74cc8ff81322aaaa046c5f980dcf7c64d57ed1fa5",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/602f2d9c-d87c-40f4-8bc3-61c472c1361b.JPEG",
+      "file": "media/profiles/2040/602f2d9c-d87c-40f4-8bc3-61c472c1361b.JPEG",
+      "bytes": 13192,
+      "sha256": "7de3dfa07daf6df48f3b60a6e82bbb172608b86976a63ce52eada534d1b5c117",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/d1b7f168-569a-4db6-897c-96172a7ded0b.JPEG",
+      "file": "media/profiles/2040/d1b7f168-569a-4db6-897c-96172a7ded0b.JPEG",
+      "bytes": 56673,
+      "sha256": "637466fa26060fec939efe894afb871b3e86a5d3460c5c04f41b41cec1d738b7",
+      "content_type": "image/jpeg"
+    },
+    {
+      "bucket": "ace-local-seed",
+      "key": "profiles/2040/aed58d05-842a-4825-b634-eb854280ae55.JPEG",
+      "file": "media/profiles/2040/aed58d05-842a-4825-b634-eb854280ae55.JPEG",
+      "bytes": 6946,
+      "sha256": "13fe35f8164819c62168285de2a5b176d23a0c6eff9392b7327b89cd7401092c",
+      "content_type": "image/jpeg"
+    }
+  ],
+  "extra_files": [
+    {
+      "file": "media-sources.json",
+      "bytes": 14186,
+      "sha256": "5c5e184fc3154956cc16764dfcd6bc3984a00315a5b388b85c128d9d195c8340"
+    }
+  ]
+}

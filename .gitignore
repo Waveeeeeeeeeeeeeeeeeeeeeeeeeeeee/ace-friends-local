@@ -1,0 +1,9 @@
+.sources/
+.private/
+.state/
+.env
+.env.*
+!.env.example
+*.log
+__pycache__/
+*.pyc
